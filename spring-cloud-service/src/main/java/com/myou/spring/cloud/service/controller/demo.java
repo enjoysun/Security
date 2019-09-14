@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Software: IntelliJ IDEA
  */
 @RestController
-@RequestMapping("/eureka")
+@RequestMapping("/service")
 public class demo {
 
     @GetMapping("/welcome")

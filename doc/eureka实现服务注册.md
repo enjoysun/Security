@@ -41,5 +41,3 @@ eureka.client.service-url.defaultZone=http://peer3:8083/eureka/,http://peer2:808
 ```  
 
 > 服务启动之时需要添加@EnableEurekaServer注解至启动类  
-
-###### 如何进行eureka发现和服务消费

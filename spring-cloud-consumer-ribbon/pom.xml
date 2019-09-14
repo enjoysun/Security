@@ -10,16 +10,32 @@
         <relativePath>../spring-cloud-dependencies/pom.xml</relativePath>
     </parent>
 
-    <artifactId>spring-cloud-service</artifactId>
+    <artifactId>spring-cloud-consumer-ribbon</artifactId>
     <packaging>jar</packaging>
     <version>0.0.1</version>
 
-    <name>spring-cloud-service</name>
+    <name>spring-cloud-consumer-ribbon</name>
     <url>myoueva@gmail.com</url>
     <inceptionYear>2018-Now</inceptionYear>
 
     <dependencies>
         <!-- Spring Boot Begin -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -32,11 +48,21 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+        </dependency>
         <!-- Spring Cloud End -->
+
+        <!-- 解决 thymeleaf 模板引擎一定要执行严格的 html5 格式校验问题 -->
+        <dependency>
+            <groupId>net.sourceforge.nekohtml</groupId>
+            <artifactId>nekohtml</artifactId>
+        </dependency>
     </dependencies>
 
     <properties>
-        <docker.image.prefix>service-docker</docker.image.prefix>
+        <docker.image.prefix>consumer-ribbon</docker.image.prefix>
     </properties>
 
     <build>
@@ -45,8 +71,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <!--手动搭建项目由于微服务为jar包打包形式，所以需要指定启动入口类-->
-                    <mainClass>com.myou.spring.cloud.service.ServiceApplication</mainClass>
+                    <mainClass>com.myou.spring.cloud.consumer.ribbon.ConsumerRibbonApplication</mainClass>
                 </configuration>
             </plugin>
 

@@ -5,33 +5,33 @@ version: "2"            # 表示使用docker-compose.yml的Version 2 file format
 #   然后通过容器间ip进行通信，exec进入内部或者inspect查看network详情获取分配ip
 # 2.对于部分容器使用ip进行通信不够灵活，docker提供了使用容器名进行通信的方法，即本案例中配置文件即使用容器名进行通信
 services:
-  eureka01:
-    hostname: eureka01             # 指定hostname eureka-docker/spring-cloud-eureka
-    image: eureka-docker/spring-cloud-eureka
+  service01:
+    hostname: service01
+    image: service-docker/spring-cloud-service
     networks:
     - eureka-net
     ports:
-    - "8081:8081"
+    - "8091:8091"
     environment:
-    - spring.profiles.active=eureka01
-  eureka02:
-    hostname: eureka02
-    image: eureka-docker/spring-cloud-eureka
+    - spring.profiles.active=service1
+  service02:
+    hostname: service02
+    image: service-docker/spring-cloud-service
     networks:
     - eureka-net
     ports:
-    - "8082:8082"
+    - "8092:8092"
     environment:
-    - spring.profiles.active=eureka02
-  eureka03:
-    hostname: eureka03
-    image: eureka-docker/spring-cloud-eureka
+    - spring.profiles.active=service2
+  service03:
+    hostname: service03
+    image: service-docker/spring-cloud-service
     networks:
     - eureka-net
     ports:
-    - "8083:8083"
+    - "8093:8093"
     environment:
-    - spring.profiles.active=eureka03
+    - spring.profiles.active=service3
 
 networks:
   eureka-net:
