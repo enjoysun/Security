@@ -27,4 +27,23 @@ spring-cloud-consumer-*:服务对外提供者(该层级服务对外暴露，使�
 
 <span>ribbon服务消费</span>  
 
-> feign集成了ribbon模式和mvn耦合的声明式接口，生产模式使用feign替代ribbon，详细调用查看spring-cloud-consumer-feign工程service/interface/login接口声明
+> feign集成了ribbon模式和mvn耦合的声明式接口，生产模式使用feign替代ribbon，详细调用查看spring-cloud-consumer-feign工程service/interface/login接口声明  
+
+
+##### feign超时重试机制  
+
+> 超时重试设置  
+配置查看feign工程实例中application配置文件 
+
+> feign超时与hystrix的超时机制是两个概念，feign超时是内部服务调用超时机制，  
+hystrix超时是提供外部服务rest调用熔断超时机制，一般hystrix超时时间要大于
+feign超时时间，因为feign超时重试要在熔断之前才有效果  
+
+###### 重试对于post和put、patch如何保证幂等？  
+
+> 服务端根据前端提交信息业务生成一个唯一的token，该token夹带于下次修改请求或者存在于服务端中，
+后端根据该token进行是否进行操作，借用分布式锁setnx，或者session，若服务端已存在一次带token操作则
+一定时间内相同token操作不允许修改数据。这个一定时间是token清除过期时间，该时间在feign重试机制中一定大于当前服务实例设置
+ribbon超时时间。在请求成功执行修改后需要对token做过期操作  
+
+###### hystrix熔断
