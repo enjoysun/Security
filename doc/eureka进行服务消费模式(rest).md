@@ -25,4 +25,6 @@ spring-cloud-consumer-*:服务对外提供者(该层级服务对外暴露，使�
  
 ```
 
-<span>ribbon服务消费</span>
+<span>ribbon服务消费</span>  
+
+> feign集成了ribbon模式和mvn耦合的声明式接口，生产模式使用feign替代ribbon，详细调用查看spring-cloud-consumer-feign工程service/interface/login接口声明
