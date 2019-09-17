@@ -33,8 +33,36 @@ spring-cloud-consumer-*:服务对外提供者(该层级服务对外暴露，使�
 ##### feign超时重试机制  
 
 > 超时重试设置  
-配置查看feign工程实例中application配置文件 
+配置查看feign工程实例中application配置文件  
 
+1. 全局超时配置  
+
+```properties
+#全局配置
+ribbon.ConnectTimeout=3000
+ribbon.ReadTimeout=2500
+```
+> 因为feign使用ribbon实现了均衡服务之间访问，所以设置ribbon的超时时间为全局设置，如果超出该时间服务接口未作出响应和没有熔断策略时抛出超时异常:  
+java.net.SocketTimeoutException: Read timed out
+
+2.  局部超时配置  
+
+```properties
+#局部配置
+# 连接超时时间
+SERVICE-CLIENT.ribbon.ConnectTimeout=3000
+# 读取超时时间
+SERVICE-CLIENT.ribbon.ReadTimeout=3000
+# 是否对所有操作请求都进行重试
+SERVICE-CLIENT.ribbon.OkToRetryOnAllOperations=true
+# 切换服务器实例的重试次数
+SERVICE-CLIENT.ribbon.MaxAutoRetriesNextServer=3
+# 对当前实例的重试次数
+SERVICE-CLIENT.ribbon.MaxAutoRetries=2
+#ServerListRefreshInterval:刷新服务列表源的间隔时间
+```
+
+<span>feign超时和hystrix超时区别</span>
 > feign超时与hystrix的超时机制是两个概念，feign超时是内部服务调用超时机制，  
 hystrix超时是提供外部服务rest调用熔断超时机制，一般hystrix超时时间要大于
 feign超时时间，因为feign超时重试要在熔断之前才有效果  
