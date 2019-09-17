@@ -1,0 +1,30 @@
+version: "2"            # 表示使用docker-compose.yml的Version 2 file format编写
+
+# docker容器间通信方式:
+# 1.容器创建时通过 --network 指定相应的网络，或者通过 docker network connect 将现有容器加入到指定网络,前提是需要通信的容器处于同一network
+#   然后通过容器间ip进行通信，exec进入内部或者inspect查看network详情获取分配ip
+# 2.对于部分容器使用ip进行通信不够灵活，docker提供了使用容器名进行通信的方法，即本案例中配置文件即使用容器名进行通信
+services:
+  feign:
+    hostname: feign
+    image: consumer-feign/spring-cloud-consumer-feign
+    networks:
+    - eureka-net
+    ports:
+    - "8070:8070"
+#    environment:
+#    - spring.profiles.active=service1
+  ribbon:
+    hostname: ribbon
+    image: consumer-ribbon/spring-cloud-consumer-ribbon
+    networks:
+    - eureka-net
+    ports:
+    - "8071:8071"
+#    environment:
+#    - spring.profiles.active=service1
+
+networks:
+  eureka-net:
+    driver: bridge
+
