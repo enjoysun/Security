@@ -23,6 +23,27 @@ services:
     - "8071:8071"
 #    environment:
 #    - spring.profiles.active=service1
+#  zuul01:
+#    hostname: feign
+#    image: zuul-docker/spring-cloud-zuul
+#    networks:
+#    - eureka-net
+#    ports:
+#    - "8060:8060"
+#  zuul02:
+#    hostname: feign
+#    image: zuul-docker/spring-cloud-zuul
+#    networks:
+#    - eureka-net
+#    ports:
+#    - "8061:8061"
+#  zuul03:
+#    hostname: feign
+#    image: zuul-docker/spring-cloud-zuul
+#    networks:
+#    - eureka-net
+#    ports:
+#    - "8062:8062"
 
 networks:
   eureka-net:
