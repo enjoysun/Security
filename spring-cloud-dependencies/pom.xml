@@ -29,6 +29,8 @@
 
         <!-- ZikKin Version-->
         <zipkin.version>2.10.1</zipkin.version>
+        <oauth2>2.3.6.RELEASE</oauth2>
+        <jwt>1.0.10.RELEASE</jwt>
     </properties>
 
     <dependencyManagement>
@@ -40,6 +42,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--zipkin start-->
             <dependency>
                 <groupId>io.zipkin.java</groupId>
                 <artifactId>zipkin</artifactId>
@@ -55,6 +58,19 @@
                 <artifactId>zipkin-autoconfigure-ui</artifactId>
                 <version>${zipkin.version}</version>
             </dependency>
+            <!--zipkin end-->
+            <!--security start-->
+            <dependency>
+                <groupId>org.springframework.security.oauth</groupId>
+                <artifactId>spring-security-oauth2</artifactId>
+                <version>${oauth2}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-jwt</artifactId>
+                <version>${jwt}</version>
+            </dependency>
+            <!--security end-->
         </dependencies>
     </dependencyManagement>
 
