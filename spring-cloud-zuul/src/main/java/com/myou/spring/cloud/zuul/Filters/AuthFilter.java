@@ -45,7 +45,7 @@ public class AuthFilter extends ZuulFilter {
             context.setSendZuulResponse(false);
             context.setResponseStatusCode(400);
             context.setResponseBody("error");
-            throw new ZuulException("ss", 200, "ss");
+//            throw new ZuulException("ss", 200, "ss");
         }
         return null;
     }

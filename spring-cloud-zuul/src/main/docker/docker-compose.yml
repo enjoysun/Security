@@ -24,12 +24,13 @@ services:
 #    environment:
 #    - spring.profiles.active=service1
 #  zuul01:
-#    hostname: feign
+#    hostname: zuul # 为了避免增加hosts文件映射，使用已经存在的主机名（后觉得不妥，遂改回）
 #    image: zuul-docker/spring-cloud-zuul
 #    networks:
 #    - eureka-net
 #    ports:
 #    - "8060:8060"
+#  16Gmac顶不住，取消部分水平扩展容器
 #  zuul02:
 #    hostname: feign
 #    image: zuul-docker/spring-cloud-zuul

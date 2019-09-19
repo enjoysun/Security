@@ -23,15 +23,15 @@ services:
     - "8092:8092"
     environment:
     - spring.profiles.active=service2
-  service03:
-    hostname: service03
-    image: service-docker/spring-cloud-service
-    networks:
-    - eureka-net
-    ports:
-    - "8093:8093"
-    environment:
-    - spring.profiles.active=service3
+#  service03:
+#    hostname: service03
+#    image: service-docker/spring-cloud-service
+#    networks:
+#    - eureka-net
+#    ports:
+#    - "8093:8093"
+#    environment:
+#    - spring.profiles.active=service3
 
 networks:
   eureka-net:

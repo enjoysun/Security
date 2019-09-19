@@ -10,11 +10,11 @@
         <relativePath>../spring-cloud-dependencies/pom.xml</relativePath>
     </parent>
 
-    <artifactId>spring-cloud-zuul</artifactId>
+    <artifactId>spring-cloud-zipkin</artifactId>
     <packaging>jar</packaging>
     <version>0.0.1</version>
 
-    <name>spring-cloud-zuul</name>
+    <name>spring-cloud-zipkin</name>
     <url>myoueva@gmail.com</url>
     <inceptionYear>2018-Now</inceptionYear>
 
@@ -45,12 +45,19 @@
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+            <groupId>io.zipkin.java</groupId>
+            <artifactId>zipkin</artifactId>
+            <version>${zipkin.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-zipkin</artifactId>
+            <groupId>io.zipkin.java</groupId>
+            <artifactId>zipkin-server</artifactId>
+            <version>${zipkin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.zipkin.java</groupId>
+            <artifactId>zipkin-autoconfigure-ui</artifactId>
+            <version>${zipkin.version}</version>
         </dependency>
         <!-- Spring Cloud End -->
         <dependency>
@@ -61,7 +68,8 @@
     </dependencies>
 
     <properties>
-        <docker.image.prefix>zuul-docker</docker.image.prefix>
+        <zipkin.version>2.10.1</zipkin.version>
+        <docker.image.prefix>zipkin-docker</docker.image.prefix>
     </properties>
 
     <build>
@@ -71,7 +79,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <!--手动搭建项目由于微服务为jar包打包形式，所以需要指定启动入口类-->
-                    <mainClass>com.myou.spring.cloud.zuul.ZuulApplication</mainClass>
+                    <mainClass>com.myou.spring.cloud.zipkin.ZipKinApplication</mainClass>
                 </configuration>
             </plugin>
 

@@ -52,6 +52,10 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
         <!-- Spring Cloud End -->
 
         <!-- 解决 thymeleaf 模板引擎一定要执行严格的 html5 格式校验问题 -->
