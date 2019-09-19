@@ -10,11 +10,11 @@
         <relativePath>../spring-cloud-dependencies/pom.xml</relativePath>
     </parent>
 
-    <artifactId>spring-cloud-zipkin</artifactId>
+    <artifactId>service-security</artifactId>
     <packaging>jar</packaging>
     <version>0.0.1</version>
 
-    <name>spring-cloud-zipkin</name>
+    <name>service-security</name>
     <url>myoueva@gmail.com</url>
     <inceptionYear>2018-Now</inceptionYear>
 
@@ -45,16 +45,8 @@
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.zipkin.java</groupId>
-            <artifactId>zipkin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.zipkin.java</groupId>
-            <artifactId>zipkin-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.zipkin.java</groupId>
-            <artifactId>zipkin-autoconfigure-ui</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
         </dependency>
         <!-- Spring Cloud End -->
         <dependency>
@@ -65,7 +57,7 @@
     </dependencies>
 
     <properties>
-        <docker.image.prefix>zipkin-docker</docker.image.prefix>
+        <docker.image.prefix>zuul-docker</docker.image.prefix>
     </properties>
 
     <build>
@@ -75,7 +67,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <!--手动搭建项目由于微服务为jar包打包形式，所以需要指定启动入口类-->
-                    <mainClass>com.myou.spring.cloud.zipkin.ZipKinApplication</mainClass>
+                    <mainClass>com.myou.service.security.SecurityApplication</mainClass>
                 </configuration>
             </plugin>
 
