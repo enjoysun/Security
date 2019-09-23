@@ -5,7 +5,8 @@
 3. 客户端(client)  
 4. 授权服务(authorization server)  
 
-[Spring Security OAuth2.0实现官方案例](https://github.com/spring-cloud-samples/authserver)
+[Spring Security OAuth2.0实现官方案例](https://github.com/spring-cloud-samples/authserver)  
+[spring security oauth2官方指导](https://www.oschina.net/translate/spring-security-oauth-docs-oauth2?lang=chs&p=1)
 
 #### 为什么需要OAuth协议  
 

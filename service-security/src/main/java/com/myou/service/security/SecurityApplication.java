@@ -1,8 +1,15 @@
 package com.myou.service.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import tk.mybatis.spring.annotation.MapperScan;
+
+import java.util.HashMap;
 
 /*
  * @Time    : 2019/9/19 10:06 AM
@@ -13,6 +20,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
  */
 @SpringBootApplication
 @EnableEurekaClient
+@MapperScan(basePackages = "com.myou.service.security.Mapper")
 public class SecurityApplication {
     public static void main(String[] args) {
         SpringApplication.run(SecurityApplication.class, args);

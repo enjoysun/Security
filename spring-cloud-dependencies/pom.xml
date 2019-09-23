@@ -31,6 +31,7 @@
         <zipkin.version>2.10.1</zipkin.version>
         <oauth2>2.3.6.RELEASE</oauth2>
         <jwt>1.0.10.RELEASE</jwt>
+        <tk.mybatis>2.1.5</tk.mybatis>
     </properties>
 
     <dependencyManagement>
@@ -69,6 +70,11 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-jwt</artifactId>
                 <version>${jwt}</version>
+            </dependency>
+            <dependency>
+                <groupId>tk.mybatis</groupId>
+                <artifactId>mapper-spring-boot-starter</artifactId>
+                <version>${tk.mybatis}</version>
             </dependency>
             <!--security end-->
         </dependencies>
