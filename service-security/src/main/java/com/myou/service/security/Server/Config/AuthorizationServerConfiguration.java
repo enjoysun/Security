@@ -28,6 +28,9 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.jwk.JwkTokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
+import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @Author myoueva@gmail.com
  * @Description 该配置类是一个授权服务的服务配置类:
