@@ -8,12 +8,11 @@ package com.myou.service.security.Server.Config;
  * @Software: IntelliJ IDEA
  */
 
-import com.myou.service.security.Common.Config.PrimaryDataSource;
 import com.myou.service.security.Common.Config.RedisLettuceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -22,14 +21,12 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
-import org.springframework.security.oauth2.provider.token.store.jwk.JwkTokenStore;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
-import java.util.Hashtable;
-import java.util.concurrent.ConcurrentHashMap;
+import javax.sql.DataSource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author myoueva@gmail.com
@@ -40,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * authorizedGrantTypes：授权类型(authorization_code:授权码，refresh_token:token刷新，password:密码授权)
  * scopes:授权范围
  * redirectUris:携带验证码回调地址
- *
+ * <p>
  * 该认证服务类包含两大信息:
  * 1.客户端详细配置
  * 2.token详细配置
@@ -55,13 +52,16 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
-    private PrimaryDataSource primaryDataSource;
+    private DataSource dataSource;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     private RedisLettuceFactory redisLettuceFactory;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     /**
      * 构建token持久化配置模式
@@ -72,7 +72,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
      */
     @Bean
     public TokenStore tokenStore() {
-        return new JdbcTokenStore(primaryDataSource.dataSource());
+        return new JdbcTokenStore(dataSource);
     }
 
     /**
@@ -82,7 +82,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
      */
     @Bean
     public ClientDetailsService clientDetailsService() {
-        return new JdbcClientDetailsService(primaryDataSource.dataSource());
+        return new JdbcClientDetailsService(dataSource);
     }
 
     @Override
@@ -90,18 +90,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         super.configure(security);
     }
 
-    /**
-     * 客户端配置实现
-     * <p>
-     * 内存持久:
-     * //        clients
-     * //                .inMemory()
-     * //                .withClient("app_id")
-     * //                .secret(bCryptPasswordEncoder.encode("app_secret"))
-     * //                .authorizedGrantTypes("authorization_code")
-     * //                .scopes("is_auth")
-     * //                .redirectUris("http://localhost:8091/service/welcome?message=login");
-     */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.withClientDetails(clientDetailsService());
@@ -109,10 +97,21 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     /**
      * 认证token操作配置类
-     * */
+     */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.tokenStore(tokenStore());
+        endpoints.authenticationManager(authenticationManager);
+
+        //TokenService
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenStore(endpoints.getTokenStore());
+        tokenServices.setSupportRefreshToken(false);
+        tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
+        tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
+        tokenServices.setAccessTokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30)); // 30天
+
+        endpoints.tokenServices(tokenServices);
     }
 }
 
