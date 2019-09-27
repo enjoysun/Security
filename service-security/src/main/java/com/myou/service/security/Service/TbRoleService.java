@@ -1,6 +1,6 @@
 package com.myou.service.security.Service;
 
-public interface TbRoleService{
+import com.myou.service.security.Domain.TbRole;
 
-
+public interface TbRoleService {
 }

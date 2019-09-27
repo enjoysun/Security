@@ -144,7 +144,30 @@ public interface UserDetails extends Serializable {
   /oauth/check_token：用于资源服务访问的令牌解析端点  
   /oauth/token_key：提供公有密匙的端点，如果你使用JWT令牌的话  
   授权端点的 URL 应该被 Spring Security 保护起来只供授权用户访问
-     
+      
+
+
+### JWT非对称加密  
+
+
+### 请求头操作Spring Security – Cache Control Headers [参考文献](https://www.baeldung.com/spring-security-cache-control-headers)  
+
+```java
+//WebSecurityHttp
+
+http.and().addHeaderWriter(new HeaderWriter() {
+                @Override
+                public void writeHeaders(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+                    httpServletResponse.setHeader("max-age", "60");
+                    httpServletResponse.setHeader("m", "test");
+                }
+            });
+```  
+
+
+### 跨域设置 [参考](https://www.jianshu.com/p/87e1ef68794c)
+
+
 
 
 

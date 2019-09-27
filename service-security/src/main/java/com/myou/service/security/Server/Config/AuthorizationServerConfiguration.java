@@ -10,6 +10,7 @@ package com.myou.service.security.Server.Config;
 
 import com.myou.service.security.Common.Config.RedisLettuceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -61,6 +62,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private RedisLettuceFactory redisLettuceFactory;
 
     @Autowired
+    @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
     /**

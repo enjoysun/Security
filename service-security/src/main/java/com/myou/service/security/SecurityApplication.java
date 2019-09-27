@@ -9,8 +9,6 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import tk.mybatis.spring.annotation.MapperScan;
 
-import java.util.HashMap;
-
 /*
  * @Time    : 2019/9/19 10:06 AM
  * @Author  : YouMing
@@ -21,16 +19,8 @@ import java.util.HashMap;
 @SpringBootApplication
 @EnableEurekaClient
 @MapperScan(basePackages = "com.myou.service.security.Mapper")
-public class SecurityApplication implements ApplicationRunner{
+public class SecurityApplication {
     public static void main(String[] args) {
         SpringApplication.run(SecurityApplication.class, args);
-    }
-
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        System.out.println("pass="+bCryptPasswordEncoder.encode("12345"));
-        System.out.println("secret="+bCryptPasswordEncoder.encode("app_secret"));
     }
 }

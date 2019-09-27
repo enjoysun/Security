@@ -1,5 +1,7 @@
-package com.myou.service.security.Server.Service;
+package com.myou.service.security.Common.Service.Impl;
 
+import com.myou.service.security.Common.Jwt.JwtUserDetail;
+import com.myou.service.security.Common.States.UserState;
 import com.myou.service.security.Domain.TbPermission;
 import com.myou.service.security.Domain.TbUser;
 import com.myou.service.security.Service.TbPermissionService;
@@ -12,27 +14,20 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
 
 /*
- * @Time    : 2019/9/23 5:40 PM
+ * @Time    : 2019/9/26 5:41 PM
  * @Author  : YouMing
  * @Email   : myoueva@gmail.com
- * @File    : CustomUserDetailService.java
+ * @File    : JwtUserDetailImpl.java
  * @Software: IntelliJ IDEA
  */
-
-/**
- * 自定义user detail
- * 声明验证用户来源
- * 声明验证权限来源
- */
-@Component
-public class CustomUserDetailService implements UserDetailsService {
+@Service
+public class JwtUserDetailImpl implements UserDetailsService {
     @Autowired
     private TbUserService userService;
 
@@ -54,14 +49,11 @@ public class CustomUserDetailService implements UserDetailsService {
                     new SimpleGrantedAuthority(item.getName())
             );
         });
-        return new User(
+        return new JwtUserDetail(
                 tbUser.getUsername(),
                 tbUser.getPassword(),
-                true,
-                true,
-                true,
-                true,
-                hashSet
+                hashSet,
+                UserState.NORMAL.getState()
         );
     }
 }
