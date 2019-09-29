@@ -49,11 +49,12 @@ public class JwtUserDetailImpl implements UserDetailsService {
                     new SimpleGrantedAuthority(item.getName())
             );
         });
-        return new JwtUserDetail(
+        JwtUserDetail jwtUserDetail = new JwtUserDetail(
                 tbUser.getUsername(),
                 tbUser.getPassword(),
                 hashSet,
                 UserState.NORMAL.getState()
         );
+        return jwtUserDetail;
     }
 }

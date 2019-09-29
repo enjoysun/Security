@@ -52,24 +52,24 @@ public class JwtUserDetail implements UserDetails {
     // 账号是否过期
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     // 账号是否锁定
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     // 凭证是否过期
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     // 是否可用
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

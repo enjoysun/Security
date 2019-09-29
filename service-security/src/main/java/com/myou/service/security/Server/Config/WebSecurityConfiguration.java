@@ -68,7 +68,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         // 过滤配置
 //        super.configure(web);
-        web.ignoring().mvcMatchers("/rbac/auth/login");
+        web.ignoring().mvcMatchers("/rbac/auth/login")
+        .mvcMatchers("/rbac/auth/refresh");
     }
 
     @Override

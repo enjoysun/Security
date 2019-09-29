@@ -44,6 +44,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         // 拦截请求token验证并操作
         String requestHeader = httpServletRequest.getHeader(jwtUtil.getTokenHeader());
         log.info("token:{}", requestHeader);
+        if (StringUtils.isNotEmpty(requestHeader) && StringUtils.isNotBlank(requestHeader)) {
+            requestHeader = requestHeader.replaceAll(jwtUtil.getTokenHead(), "");
+        }
         String username = jwtUtil.getUsernameFromToken(requestHeader);
         if (StringUtils.isNotBlank(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = jwtUserDetail.loadUserByUsername(username);

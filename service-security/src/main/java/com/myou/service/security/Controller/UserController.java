@@ -37,4 +37,9 @@ public class UserController {
         String login = userCenter.login(builder);
         return Result.success(login);
     }
+
+    @PostMapping("/rbac/auth/refresh")
+    public Result refresh(@RequestBody Map<String, String> map) {
+        return Result.success(userCenter.refresh_token(map.get("old_key")));
+    }
 }
