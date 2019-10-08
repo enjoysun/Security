@@ -6,6 +6,7 @@ import com.myou.service.security.Service.TbUserService;
 import com.myou.service.security.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
@@ -41,5 +42,11 @@ public class UserController {
     @PostMapping("/rbac/auth/refresh")
     public Result refresh(@RequestBody Map<String, String> map) {
         return Result.success(userCenter.refresh_token(map.get("old_key")));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @GetMapping("/service")
+    public Result serviceInfo() {
+        return Result.success("ok");
     }
 }
