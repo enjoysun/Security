@@ -12,6 +12,7 @@ import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +22,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.HeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -87,7 +90,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 // 允许所有options动作可访问
 //                .authorizeRequests().accessDecisionManager(accessDecisionManager()).antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .authorizeRequests()
+                // 自定义权限加载验证
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                        o.setSecurityMetadataSource(customFilterInvocationSecurityMetaDataSource(o.getSecurityMetadataSource()));
+                        return o;
+                    }
+                })
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // 暴露关于token操作接口
                 .antMatchers("/auth/**").permitAll()
                 // 页面按照权限进行访问限制
@@ -114,13 +126,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     // 定制验证范围来源
+//    @Bean
+//    public AccessDecisionManager accessDecisionManager() {
+//        List<AccessDecisionVoter<?>> voters = Arrays.asList(
+//                new WebExpressionVoter(),
+//                new RoleBaseRoute(),
+//                new AuthenticatedVoter()
+//        );
+//        return new UnanimousBased(voters);
+//    }
+
     @Bean
-    public AccessDecisionManager accessDecisionManager() {
-        List<AccessDecisionVoter<?>> voters = Arrays.asList(
-                new WebExpressionVoter(),
-                new RoleBaseRoute(),
-                new AuthenticatedVoter()
-        );
-        return new UnanimousBased(voters);
+    public CustomFilterInvocationSecurityMetaDataSource customFilterInvocationSecurityMetaDataSource(FilterInvocationSecurityMetadataSource filterInvocationSecurityMetadataSource) {
+        return new CustomFilterInvocationSecurityMetaDataSource(filterInvocationSecurityMetadataSource);
     }
+
 }
