@@ -7,4 +7,6 @@ import java.util.List;
 public interface TbPermissionService {
 
     List<TbPermission> selectByUserId(Long uid);
+
+    List<TbPermission> selectByRoleId(Long rid);
 }

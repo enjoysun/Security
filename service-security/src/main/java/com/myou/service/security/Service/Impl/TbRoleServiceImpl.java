@@ -32,4 +32,9 @@ public class TbRoleServiceImpl implements TbRoleService {
     public List<TbRole> RolesById(Long id) {
         return tbRoleMapper.selectRoleById(id);
     }
+
+    @Override
+    public List<TbRole> selectRolesAndPermission() {
+        return tbRoleMapper.selectRolesAndPermission();
+    }
 }

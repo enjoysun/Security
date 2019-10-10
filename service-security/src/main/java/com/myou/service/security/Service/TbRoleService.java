@@ -10,4 +10,6 @@ public interface TbRoleService {
     List<TbRole> selectRoleById(Long id);
 
     List<TbRole> RolesById(Long id);
+
+    List<TbRole> selectRolesAndPermission();
 }

@@ -2,6 +2,7 @@ package com.myou.service.security.Domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -63,4 +64,6 @@ public class TbRole implements Serializable {
     private Date updated;
 
     private static final long serialVersionUID = 1L;
+
+    private List<TbPermission> permissions;
 }

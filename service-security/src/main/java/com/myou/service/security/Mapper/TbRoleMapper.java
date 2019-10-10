@@ -12,4 +12,6 @@ public interface TbRoleMapper extends Mymapper<TbRole> {
     List<TbRole> selectRoles(@Param("rid") Long rid);
 
     List<TbRole> selectRoleById(@Param("uid") Long uid);
+
+    List<TbRole> selectRolesAndPermission();
 }

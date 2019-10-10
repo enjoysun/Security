@@ -5,6 +5,7 @@ import com.myou.service.security.Common.States.UserState;
 import com.myou.service.security.Domain.TbPermission;
 import com.myou.service.security.Domain.TbRole;
 import com.myou.service.security.Domain.TbUser;
+import com.myou.service.security.Server.Service.CustomGrantedAuthority;
 import com.myou.service.security.Service.TbPermissionService;
 import com.myou.service.security.Service.TbRoleService;
 import com.myou.service.security.Service.TbUserService;
@@ -12,7 +13,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -53,7 +53,8 @@ public class JwtUserDetailImpl implements UserDetailsService {
         HashSet<GrantedAuthority> hashSet = new HashSet<>();
         tbRoles.forEach(item -> {
             hashSet.add(
-                    new SimpleGrantedAuthority(item.getEnname())
+//                    new SimpleGrantedAuthority(item.getEnname())
+                    new CustomGrantedAuthority(item, permissionService.selectByRoleId(item.getId()))
             );
         });
         JwtUserDetail jwtUserDetail = new JwtUserDetail(

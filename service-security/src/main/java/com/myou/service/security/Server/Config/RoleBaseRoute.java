@@ -1,8 +1,12 @@
 package com.myou.service.security.Server.Config;
 
+import com.myou.service.security.Server.Domain.Authority;
+import com.myou.service.security.Server.Service.CustomGrantedAuthority;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.web.FilterInvocation;
 
 import java.util.Collection;
 
@@ -28,6 +32,24 @@ public class RoleBaseRoute implements AccessDecisionVoter<Object> {
     @Override
     public int vote(Authentication authentication, Object o, Collection<ConfigAttribute> collection) {
         // todo 验证动态配置路由
-        return 0;
+        if (authentication == null)
+            return ACCESS_DENIED;
+        int result = ACCESS_ABSTAIN;
+        FilterInvocation invocation = (FilterInvocation) o;
+        String url = invocation.getRequestUrl();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        for (ConfigAttribute attribute : collection) {
+            if (attribute.getAttribute() == null)
+                continue;
+            if (this.supports(attribute)) {
+                result = ACCESS_DENIED;
+                for (GrantedAuthority authority : authorities) {
+                    if (attribute.getAttribute().equals(authority.getAuthority())) {
+                        return ACCESS_GRANTED;
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

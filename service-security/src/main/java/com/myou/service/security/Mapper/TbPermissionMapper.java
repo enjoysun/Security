@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface TbPermissionMapper extends Mymapper<TbPermission> {
     List<TbPermission> selectPermissionByUserId(@Param("uid") Long uid);
+
+    List<TbPermission> selectPermissionByRoleId(@Param("rid") Long rid);
 }

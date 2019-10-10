@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,6 +20,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.HeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -24,6 +29,8 @@ import org.springframework.web.filter.CorsFilter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.List;
 
 /*
  * @Time    : 2019/9/19 5:14 PM
@@ -69,7 +76,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // 过滤配置
 //        super.configure(web);
         web.ignoring().mvcMatchers("/rbac/auth/login")
-        .mvcMatchers("/rbac/auth/refresh");
+                .mvcMatchers("/rbac/auth/refresh");
     }
 
     @Override
@@ -79,6 +86,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // 取消spring的session机制
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 // 允许所有options动作可访问
+//                .authorizeRequests().accessDecisionManager(accessDecisionManager()).antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // 暴露关于token操作接口
                 .antMatchers("/auth/**").permitAll()
@@ -103,5 +111,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         cors.addAllowedMethod("*");
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", cors);
         return new CorsFilter(urlBasedCorsConfigurationSource);
+    }
+
+    // 定制验证范围来源
+    @Bean
+    public AccessDecisionManager accessDecisionManager() {
+        List<AccessDecisionVoter<?>> voters = Arrays.asList(
+                new WebExpressionVoter(),
+                new RoleBaseRoute(),
+                new AuthenticatedVoter()
+        );
+        return new UnanimousBased(voters);
     }
 }
