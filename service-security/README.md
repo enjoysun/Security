@@ -1,6 +1,6 @@
 #### spring-security项目介绍  
 
-> 该模块初步实现了oauth协议的认证模块，登录信息编码至jwt中  
+> 该模块参照oauth协议的认证模块,登录信息编码至jwt中,实现动态资源验证  
 
 > 控制路由模块类:WebSecurityConfigurerAdapter实现类中   
 UsernamePasswordAuthenticationFilter->AbstractUserDetailsAuthenticationProvider->SecurityContextHolder.getContext().setAuthentication链路 
@@ -14,4 +14,16 @@ JwtUserDetail:增加userDetails定制user信息实体
 登录:/rbac/auth/login  
 刷新:/rbac/auth/refresh  
 注册:/rbac/auth/register  
-余下路由皆需要接入认证
+余下路由皆需要接入认证  
+
+#### 认证和授权模型设计  
+![image](https://github.com/enjoysun/Security/blob/master/service-security/src/main/resources/images/doc/tb-er.png)  
+
+###### 认证模块设计  
+
+
+#### token和jwt接入
+
+#### 动态权限验证设计  
+
+#### 授权设计
