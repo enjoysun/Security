@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.FilterInvocation;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 /*
  * @Time    : 2019/10/8 6:00 PM
@@ -34,6 +35,7 @@ public class RoleBaseRoute implements AccessDecisionVoter<Object> {
         // todo 验证动态配置路由
         if (authentication == null)
             return ACCESS_DENIED;
+//        HashMap
         int result = ACCESS_ABSTAIN;
         FilterInvocation invocation = (FilterInvocation) o;
         String url = invocation.getRequestUrl();

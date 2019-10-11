@@ -9,10 +9,7 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.util.AntPathMatcher;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /*
  * @Time    : 2019/10/10 5:08 PM
@@ -24,6 +21,9 @@ import java.util.Map;
 
 /**
  * 动态加载权限并验证
+ * SecurityMetadataSource:访问权限资源中心(加载所有权限至系统)
+ * 权限资源:
+ * url:role（一个url对应多个角色、一个角色对应多个url）
  */
 public class CustomFilterInvocationSecurityMetaDataSource implements FilterInvocationSecurityMetadataSource {
 
@@ -34,7 +34,8 @@ public class CustomFilterInvocationSecurityMetaDataSource implements FilterInvoc
     @Autowired
     private TbRoleService roleService;
 
-    private Map<String, String> roleMap = new HashMap<>();
+    // 权限资源集合
+    private Map<String, Collection<ConfigAttribute>> map = new HashMap<>();
 
     public CustomFilterInvocationSecurityMetaDataSource(FilterInvocationSecurityMetadataSource expressionBasedFilterInvocationSecurityMetadataSource) {
         superMetadataSource = expressionBasedFilterInvocationSecurityMetadataSource;
@@ -42,22 +43,22 @@ public class CustomFilterInvocationSecurityMetaDataSource implements FilterInvoc
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
-        // 加载角色树可以再初始化登录完成并缓冲
         List<TbRole> roles = roleService.selectRolesAndPermission();
         roles.forEach(item -> {
             item.getPermissions().forEach(per -> {
-                roleMap.put(per.getEnname(), item.getEnname());
+                map.put(per.getUrl(), new ArrayList<ConfigAttribute>(Arrays.asList(new SecurityConfig(item.getEnname()))));
             });
         });
         FilterInvocation invocation = (FilterInvocation) o;
         String url = invocation.getRequestUrl();
-        for (Map.Entry<String, String> entry : roleMap.entrySet()) {
+        String method = invocation.getRequest().getMethod();
+        for (Map.Entry<String, Collection<ConfigAttribute>> entry : map.entrySet()) {
             if (antPathMatcher.match(entry.getKey(), url)) {
-                return SecurityConfig.createList(entry.getValue());
+                return entry.getValue();
             }
         }
-        // 使用默认的superMetadataSource角色验证成功
-        return SecurityConfig.createList("ROLE_USER");
+        // 若匹配失败则默认为游客权限
+        return SecurityConfig.createList("ROLE_LOGIN");
     }
 
     @Override

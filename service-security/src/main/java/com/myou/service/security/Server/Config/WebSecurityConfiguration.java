@@ -96,6 +96,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     @Override
                     public <O extends FilterSecurityInterceptor> O postProcess(O o) {
                         o.setSecurityMetadataSource(customFilterInvocationSecurityMetaDataSource(o.getSecurityMetadataSource()));
+                        o.setAccessDecisionManager(customAccessDecisionManager());
                         return o;
                     }
                 })
@@ -137,8 +138,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 //    }
 
     @Bean
-    public CustomFilterInvocationSecurityMetaDataSource customFilterInvocationSecurityMetaDataSource(FilterInvocationSecurityMetadataSource filterInvocationSecurityMetadataSource) {
+    public FilterInvocationSecurityMetadataSource customFilterInvocationSecurityMetaDataSource(FilterInvocationSecurityMetadataSource filterInvocationSecurityMetadataSource) {
         return new CustomFilterInvocationSecurityMetaDataSource(filterInvocationSecurityMetadataSource);
     }
 
+    @Bean
+    public AccessDecisionManager customAccessDecisionManager() {
+        return new CustomAccessDecisionManager();
+    }
 }

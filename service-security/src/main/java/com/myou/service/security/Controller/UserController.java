@@ -44,8 +44,8 @@ public class UserController {
         return Result.success(userCenter.refresh_token(map.get("old_key")));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping("/service")
+//    @PreAuthorize("hasAnyRole('ADMIN')")
+    @GetMapping("/System")
     public Result serviceInfo() {
         return Result.success("ok");
     }
