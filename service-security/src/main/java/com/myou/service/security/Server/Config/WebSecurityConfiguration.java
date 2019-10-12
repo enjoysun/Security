@@ -78,8 +78,18 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         // 过滤配置
 //        super.configure(web);
-        web.ignoring().mvcMatchers("/rbac/auth/login")
-                .mvcMatchers("/rbac/auth/refresh");
+        web.ignoring()
+                .mvcMatchers("/rbac/auth/login")
+                .mvcMatchers("/rbac/auth/refresh")
+                .mvcMatchers("/login")
+                .mvcMatchers("/error")
+                .mvcMatchers("/oauth/error")
+                .mvcMatchers("/oauth_approval")
+                .mvcMatchers("/oauth/authorize")
+                .mvcMatchers("/oauth/confirm_access")
+                .mvcMatchers("/oauth/token")
+                .mvcMatchers("/oauth/confirm_access")
+                .mvcMatchers("/oauth/**");
     }
 
     @Override
@@ -108,6 +118,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/test/**").permitAll()
                 // 尚未被以上规则匹配的URL都需要进行身份验证配置
                 .anyRequest().authenticated()
+                .and().formLogin().loginPage("/login")
                 .and().headers().cacheControl();
         // 注入jwt过滤器
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);

@@ -92,6 +92,17 @@ public class JwtUtil {
         return username;
     }
 
+    public String getUserNameFromTokenByKey(String key, String token) {
+        String username;
+        try {
+            Claims claims = getClaimsFromToken(token);
+            username = claims.get(key, String.class);
+        } catch (Exception e) {
+            username = null;
+        }
+        return username;
+    }
+
     /**
      * 判断令牌是否过期
      *

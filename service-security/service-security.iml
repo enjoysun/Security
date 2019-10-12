@@ -67,13 +67,21 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-jcl:5.1.9.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-test:5.1.9.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.xmlunit:xmlunit-core:2.6.3" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-thymeleaf:2.1.8.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.thymeleaf:thymeleaf-spring5:3.0.11.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.thymeleaf:thymeleaf:3.0.11.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.attoparser:attoparser:2.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.unbescape:unbescape:1.1.6.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-freemarker:2.1.8.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.freemarker:freemarker:2.3.29" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-context-support:5.1.9.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-redis:2.1.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-redis:2.1.10.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-keyvalue:2.1.10.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-commons:2.1.10.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.1.9.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-oxm:5.1.9.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-context-support:5.1.9.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: io.lettuce:lettuce-core:5.1.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.39.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.39.Final" level="project" />
@@ -145,8 +153,6 @@
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-commons:2.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-rsa:1.0.7.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-netflix-eureka-server:2.1.2.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-freemarker:2.1.8.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.freemarker:freemarker:2.3.29" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-netflix-hystrix:2.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-netflix-eureka-client:2.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: com.netflix.eureka:eureka-client:1.9.12" level="project" />

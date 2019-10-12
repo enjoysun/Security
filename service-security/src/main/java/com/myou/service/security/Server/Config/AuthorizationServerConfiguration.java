@@ -9,24 +9,36 @@ package com.myou.service.security.Server.Config;
  */
 
 import com.myou.service.security.Common.Config.RedisLettuceFactory;
+import com.myou.service.security.Common.Jwt.JwtUserDetail;
+import com.myou.service.security.Common.Jwt.JwtUtil;
+import com.myou.service.security.Common.Service.Impl.JwtUserDetailImpl;
+import com.myou.service.security.Common.States.UserState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import javax.sql.DataSource;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -65,6 +77,12 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private JwtUserDetailImpl jwtUserDetail;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
     /**
      * 构建token持久化配置模式
      * jdbc持久化至数据库
@@ -89,7 +107,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        super.configure(security);
+//        super.configure(security);
+        security.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
     }
 
     @Override
@@ -97,24 +116,79 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         clients.withClientDetails(clientDetailsService());
     }
 
+//    /**
+//     * 普通token操作：认证token操作配置类
+//     */
+//    @Override
+//    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+//        endpoints.tokenStore(tokenStore());
+//        endpoints.authenticationManager(authenticationManager);
+//
+//        //TokenService
+//        DefaultTokenServices tokenServices = new DefaultTokenServices();
+//        tokenServices.setTokenStore(endpoints.getTokenStore());
+//        tokenServices.setSupportRefreshToken(false);
+//        tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
+//        tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
+//        tokenServices.setAccessTokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30)); // 30天
+//
+//        endpoints.tokenServices(tokenServices);
+//    }
+
     /**
-     * 认证token操作配置类
+     * jwt token操作：认证token操作配置类
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.tokenStore(tokenStore());
-        endpoints.authenticationManager(authenticationManager);
-
-        //TokenService
-        DefaultTokenServices tokenServices = new DefaultTokenServices();
-        tokenServices.setTokenStore(endpoints.getTokenStore());
-        tokenServices.setSupportRefreshToken(false);
-        tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
-        tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
-        tokenServices.setAccessTokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30)); // 30天
-
-        endpoints.tokenServices(tokenServices);
+        endpoints.tokenStore(tokenStore())
+                .authenticationManager(authenticationManager)
+                .userDetailsService(jwtUserDetail);
+//                .accessTokenConverter()
     }
+
+    /**
+     * jwt 生成控制器
+     */
+    @Bean
+    public JwtAccessTokenConverter accessTokenConverter() {
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter() {
+//            @Override
+//            public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+//                String name = authentication.getUserAuthentication().getName();
+//                Object credentials = authentication.getUserAuthentication().getCredentials(); //用户名
+//                Object principal = authentication.getUserAuthentication().getPrincipal(); // 用户密码
+//                Collection<GrantedAuthority> authorities = authentication.getAuthorities();
+//                HashMap<String, Object> hashMap = new HashMap<>();
+//                hashMap.put("name", name);
+//                hashMap.put("principal", principal);
+//                hashMap.put("credentials", credentials);
+//                hashMap.put("authorities", authorities);
+//                ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(hashMap);
+//                return super.enhance(accessToken, authentication);
+//            }
+
+            @Override
+            protected String encode(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+                String name = authentication.getUserAuthentication().getName();
+                Object credentials = authentication.getUserAuthentication().getCredentials(); //用户名
+                Object principal = authentication.getUserAuthentication().getPrincipal(); // 用户密码
+                Collection<GrantedAuthority> authorities = authentication.getAuthorities();
+                JwtUserDetail userDetail = new JwtUserDetail(principal.toString(), credentials.toString(), authorities, UserState.NORMAL.getState());
+                return jwtUtil.generateToken(userDetail);
+            }
+
+            @Override
+            protected Map<String, Object> decode(String token) {
+                String principal = jwtUtil.getUserNameFromTokenByKey("principal", token);
+                return new HashMap<String, Object>() {{
+                    put("principal", principal);
+                }};
+            }
+        };
+        return converter;
+    }
+
+
 }
 
 /**

@@ -504,6 +504,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 #### token接入和验证  
 
+> jwtToken模式适用于webApi，该模式更加倾向于一次性，对于需要及时过期和下线的系统，jwtToken确不适用  
+因为jwt一但在系统中签发完成，这个token就是有效的，在这个有效时间内访问api仍具有合法性。所以针对需要及时性的token可借鉴以下方案  
+
+> Token模式两大核心:签发和验证  
+签发:仍然在登录和刷新api接口进行签发token，该token可由内部规则指定(用于替代login中jwtUtil的颁发)，签发token
+后需要将token对接存储系统(redis等)，并赋予过期时间  
+验证:验证模块与jwt验证稍不同。jwt验证由系统算法进行对比验证，而token验证则需要访问存储系统进行对比验证  
+强制过期:提供强制过期api，进行存储系统token过期操作，则能够完成及时下线和单点登录等    
  
 
-#### 授权设计
+#### 授权设计  
+
+###### 授权码模式
