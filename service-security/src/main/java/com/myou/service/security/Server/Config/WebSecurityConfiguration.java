@@ -79,6 +79,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // 过滤配置
 //        super.configure(web);
         web.ignoring()
+                // 授权码授权页面被拦截
                 .mvcMatchers("/rbac/auth/login")
                 .mvcMatchers("/rbac/auth/refresh")
                 .mvcMatchers("/login")
