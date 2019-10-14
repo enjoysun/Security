@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myou.gateway.security.oauth.Mapper.OauthRefreshTokenMapper">
+  <resultMap id="BaseResultMap" type="com.myou.gateway.security.oauth.Model.OauthRefreshToken">
+    <!--@mbg.generated generated on Mon Oct 14 16:48:10 CST 2019.-->
+    <!--@Table oauth_refresh_token-->
+    <result column="token_id" jdbcType="VARCHAR" property="tokenId" />
+    <result column="token" jdbcType="BLOB" property="token" />
+    <result column="authentication" jdbcType="BLOB" property="authentication" />
+  </resultMap>
+</mapper>
