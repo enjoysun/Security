@@ -2,7 +2,9 @@ package com.myou.gateway.security.oauth.Model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
+
 import lombok.Data;
 
 @Data
@@ -42,6 +44,8 @@ public class TbUser implements Serializable {
 
     @Column(name = "updated")
     private Date updated;
+
+    private List<TbRole> roles;
 
     private static final long serialVersionUID = 1L;
 }

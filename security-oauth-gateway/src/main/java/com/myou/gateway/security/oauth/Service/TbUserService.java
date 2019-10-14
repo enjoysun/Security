@@ -1,6 +1,7 @@
 package com.myou.gateway.security.oauth.Service;
 
-public interface TbUserService{
+import com.myou.gateway.security.oauth.Model.TbUser;
 
-
+public interface TbUserService {
+    TbUser selectUserRolePermissionById(Long uid);
 }

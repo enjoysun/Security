@@ -1,19 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.myou.gateway.security.oauth.Mapper.TbUserMapper">
-  <resultMap id="BaseResultMap" type="com.myou.gateway.security.oauth.Model.TbUser">
-    <!--@mbg.generated generated on Mon Oct 14 16:48:09 CST 2019.-->
-    <!--@Table tb_user-->
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="created" jdbcType="TIMESTAMP" property="created" />
-    <result column="updated" jdbcType="TIMESTAMP" property="updated" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    <!--@mbg.generated generated on Mon Oct 14 16:48:09 CST 2019.-->
-    id, username, `password`, phone, email, created, updated
-  </sql>
+    <resultMap id="BaseResultMap" type="com.myou.gateway.security.oauth.Model.TbUser">
+        <!--@mbg.generated generated on Mon Oct 14 16:48:09 CST 2019.-->
+        <!--@Table tb_user-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="updated" jdbcType="TIMESTAMP" property="updated"/>
+    </resultMap>
+    <resultMap id="UserRoleAndPermissionResultMap" type="com.myou.gateway.security.oauth.Model.TbUser">
+        <!--@mbg.generated generated on Mon Oct 14 16:48:09 CST 2019.-->
+        <!--@Table tb_user-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="updated" jdbcType="TIMESTAMP" property="updated"/>
+        <collection property="roles" ofType="com.myou.gateway.security.oauth.Model.TbRole">
+            <id column="rid" jdbcType="BIGINT" property="id"/>
+            <result column="r_pid" jdbcType="BIGINT" property="parentId"/>
+            <result column="rname" jdbcType="VARCHAR" property="name"/>
+            <result column="renname" jdbcType="VARCHAR" property="enname"/>
+            <collection property="permissions" ofType="com.myou.gateway.security.oauth.Model.TbPermission">
+                <id column="pid" jdbcType="BIGINT" property="id"/>
+                <result column="p_pid" jdbcType="BIGINT" property="parentId"/>
+                <result column="pname" jdbcType="VARCHAR" property="name"/>
+                <result column="penname" jdbcType="VARCHAR" property="enname"/>
+                <result column="url" jdbcType="VARCHAR" property="url"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated generated on Mon Oct 14 16:48:09 CST 2019.-->
+        id, username, `password`, phone, email, created, updated
+    </sql>
+
+    <select id="selectUserRolePermission" resultMap="UserRoleAndPermissionResultMap">
+        SELECT
+        u.*,
+        r.id as rid, r.parent_id as r_pid, r.`name` as rname, r.enname as renname,
+        p.id as pid, p.parent_id as p_pid, p.`name` as pname, p.enname as penname, p.url
+        FROM
+        tb_user AS u
+        LEFT JOIN tb_user_role AS ur
+        ON u.id = ur.user_id
+        LEFT JOIN tb_role AS r
+        ON r.id = ur.role_id
+        LEFT JOIN tb_role_permission AS rp
+        ON r.id = rp.role_id
+        LEFT JOIN tb_permission AS p
+        ON p.id = rp.permission_id
+        WHERE u.id = ${uid}
+    </select>
 </mapper>
