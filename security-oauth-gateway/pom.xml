@@ -10,11 +10,11 @@
         <relativePath>../spring-cloud-dependencies/pom.xml</relativePath>
     </parent>
 
-    <artifactId>service-security</artifactId>
+    <artifactId>security-oauth-gateway</artifactId>
     <packaging>jar</packaging>
     <version>0.0.1</version>
 
-    <name>service-security</name>
+    <name>security-oauth-gateway</name>
     <url>myoueva@gmail.com</url>
     <inceptionYear>2018-Now</inceptionYear>
 
@@ -50,18 +50,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session-data-redis</artifactId>
-        </dependency>
         <!--Redis Template End-->
 
         <!--MyBatis、DataSource Start-->
         <!--<dependency>-->
-            <!--<groupId>org.mybatis.spring.boot</groupId>-->
-            <!--<artifactId>mybatis-spring-boot-starter</artifactId>-->
-            <!--<version>2.1.0</version>-->
+        <!--<groupId>org.mybatis.spring.boot</groupId>-->
+        <!--<artifactId>mybatis-spring-boot-starter</artifactId>-->
+        <!--<version>2.1.0</version>-->
         <!--</dependency>-->
         <dependency>
             <groupId>mysql</groupId>
@@ -168,7 +163,7 @@
     </dependencies>
 
     <properties>
-        <docker.image.prefix>security-docker</docker.image.prefix>
+        <docker.image.prefix>gateway-docker</docker.image.prefix>
     </properties>
 
     <build>
@@ -178,7 +173,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <!--手动搭建项目由于微服务为jar包打包形式，所以需要指定启动入口类-->
-                    <mainClass>com.myou.service.security.SecurityApplication</mainClass>
+                    <mainClass>com.myou.gateway.security.oauth.SecurityOauthApplication</mainClass>
                 </configuration>
             </plugin>
 
@@ -200,24 +195,27 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <!--mybatis自动生成插件配置，mvn选项找到该插件配置即可运行-->
-                <groupId>org.mybatis.generator</groupId>
-                <artifactId>mybatis-generator-maven-plugin</artifactId>
-                <version>1.3.2</version>
-                <configuration>
-                    <verbose>true</verbose>
-                    <overwrite>true</overwrite>
-                    <configurationFile>src/main/resources/generatorConfig.xml</configurationFile>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>mysql</groupId>
-                        <artifactId>mysql-connector-java</artifactId>
-                        <version>${mysql.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
+            <!--
+            由MyBatisCodeHelperPro插件替代
+            -->
+            <!--<plugin>-->
+                <!--&lt;!&ndash;mybatis自动生成插件配置，mvn选项找到该插件配置即可运行&ndash;&gt;-->
+                <!--<groupId>org.mybatis.generator</groupId>-->
+                <!--<artifactId>mybatis-generator-maven-plugin</artifactId>-->
+                <!--<version>1.3.2</version>-->
+                <!--<configuration>-->
+                    <!--<verbose>true</verbose>-->
+                    <!--<overwrite>true</overwrite>-->
+                    <!--<configurationFile>src/main/resources/generatorConfig.xml</configurationFile>-->
+                <!--</configuration>-->
+                <!--<dependencies>-->
+                    <!--<dependency>-->
+                        <!--<groupId>mysql</groupId>-->
+                        <!--<artifactId>mysql-connector-java</artifactId>-->
+                        <!--<version>${mysql.version}</version>-->
+                    <!--</dependency>-->
+                <!--</dependencies>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 </project>
