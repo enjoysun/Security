@@ -15,10 +15,140 @@
 
 ### 授权服务中心  
 
-#### 实现认证  
+#### 服务器安全配置  
 
 ##### 自定义用户实体  
 
-[参考com.myou.gateway.security.oauth.Grant.Model.]() 
+[参考com.myou.gateway.security.oauth.Grant.Model.UserDetailExtension](#https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/java/com/myou/gateway/security/oauth/Grant/Model/UserDetailExtension.java)
 
-#### 实现授权
+>用户实体信息继承自spring-security的UserDetails规则接口，实现接口方法，且可深度定制系统相关信息字段方法  
+
+###### 认证加载用户信息  
+
+[参考com.myou.gateway.security.oauth.Grant.Service.Impl.UserDetailImpl](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/java/com/myou/gateway/security/oauth/Grant/Service/Impl/UserDetailImpl.java)
+
+>该类也是实现spring-security框架认证部分内容，进行用户信息载入认证。**该模块自定义实现了GrantedAuthorityExtension扩展类进行角色内容类进行扩展**
+
+###### 安全验证配置  
+
+```java
+@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    // 注入用户角色加载类实现
+    @Autowired
+    private UserDetailImpl userDetail;
+    // 注入密码加密模式实现
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // 配置认证用户
+        auth.userDetailsService(userDetail).passwordEncoder(bCryptPasswordEncoder);
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        // 过滤路由配置
+        web.ignoring()
+                .mvcMatchers("/oauth/**")
+                .mvcMatchers("/rbac/**");
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // 开放路由配置
+        http.csrf().disable()
+                .cors().and()
+                // 关闭session
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                // http.authorizeRequests() 方法中的自定义匹配 指定所有用户都可以访问antMatchers路由内容，未匹配的路由需要进行身份验证
+                .authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll().anyRequest().authenticated();
+    }
+
+    // 跨域配置(WebSecurityHttp也需要支持cors().and())
+    @Bean
+    public CorsFilter corsFilter() {
+        final UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        final CorsConfiguration cors = new CorsConfiguration();
+        cors.setAllowCredentials(true);
+        cors.addAllowedOrigin("*");
+        cors.addAllowedHeader("*");
+        cors.addAllowedMethod("*");
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", cors);
+        return new CorsFilter(urlBasedCorsConfigurationSource);
+    }
+}
+```
+
+#### 认证授权配置  
+
+#todo
+
+
+#### self-signed certificate configure(本文生产的mykeystore.jks步骤)  
+
+######1. 安装openssl
+
+######2. create rsa private key  
+```shell
+  # The below command will create a file named 'server.pass.key' and place it in the same folder where the command is executed. 
+  $ openssl genrsa -des3 -passout pass:x -out server.pass.key 2048
+  # The below command will use the 'server.pass.key' file that just generated and create 'server.key'.
+  $ openssl rsa -passin pass:x -in server.pass.key -out server.key
+  # We no longer need the 'server.pass.key'
+  $ rm server.pass.key
+```  
+######3. Create the Certificate Signing Request (CSR), utilizing the RSA private key we generated in the last step.
+```shell
+# The below command will ask you for information that would be included in the certificate. Since this is a self-signed certificate, there is no need to provide the 'challenge password' (to leave it blank, press enter).
+$ openssl req -new -key server.key -out server.csr
+```  
+
+#######4. Generate a file named v3.ext with the below-listed contents:  
+v3.ext内容:
+```ext
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = <specify-the-same-common-name-that-you-used-while-generating-csr-in-the-last-step>
+# DNS.1值为3步填充的Common name的值
+```
+
+######5. Create the SSL Certificate, utilizing the CSR created in the last step.  
+
+```shell
+openssl x509 -req -sha256 -extfile v3.ext -days 365 -in server.csr -signkey server.key -out server.crt
+Signature ok
+subject=/C=<country>/ST=<state>/L=<locality>/O=<organization-name>/OU=<organization-unit-name>/CN=<common-name-probably-server-fqdn>/emailAddress=<email-address-provided-while-generating-csr>
+Getting Private key
+# 执行第一行命令，余下皆为输出内容
+```
+
+######6.Creating P12  
+
+```shell
+openssl pkcs12 -export -name servercert -in server.crt -inkey server.key -out myp12keystore.p12
+# 记下p12文件密码，下一个步骤需要使用
+```  
+
+######7.Converting P12 to JKS  
+```shell
+keytool -importkeystore -destkeystore mykeystore.jks -srckeystore myp12keystore.p12 -srcstoretype pkcs12 -alias servercert
+输入目标密钥库口令(新jks口令):
+再次输入新口令:
+输入源密钥库口令:(p12文件口令)
+# 注意alias
+```
