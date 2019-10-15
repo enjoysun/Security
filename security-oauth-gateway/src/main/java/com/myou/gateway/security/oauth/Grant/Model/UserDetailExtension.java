@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * 用户信息定制
- * */
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -29,13 +29,14 @@ import java.util.List;
 public class UserDetailExtension implements UserDetails {
     private String userName;
     private String passWord;
-    private List<String> permissions;
+    private Collection<? extends GrantedAuthority> roles;
     private String phone;
     private String email;
     private UserState state;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return roles;
     }
 
     @Override

@@ -9,4 +9,16 @@
 > 授权码认证模式用于第三方应用接入  
 密码认证进行项目系统组成部分客户端认证用于用户登录  
 
-> 所以本项目中授权类型grant_type:password密码模式、authorization_code授权码模式
+> 所以本项目中授权类型grant_type:password密码模式、authorization_code授权码模式  
+
+
+
+### 授权服务中心  
+
+#### 实现认证  
+
+##### 自定义用户实体  
+
+[参考com.myou.gateway.security.oauth.Grant.Model.]() 
+
+#### 实现授权

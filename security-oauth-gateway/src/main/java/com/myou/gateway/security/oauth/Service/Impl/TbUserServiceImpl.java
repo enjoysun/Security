@@ -15,7 +15,7 @@ public class TbUserServiceImpl implements TbUserService {
     private TbUserMapper tbUserMapper;
 
     @Override
-    public TbUser selectUserRolePermissionById(Long uid) {
+    public TbUser selectUserRolePermissionById(String uid) {
         return tbUserMapper.selectUserRolePermission(uid);
     }
 }

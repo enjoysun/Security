@@ -56,6 +56,6 @@
         ON r.id = rp.role_id
         LEFT JOIN tb_permission AS p
         ON p.id = rp.permission_id
-        WHERE u.id = ${uid}
+        WHERE u.username = #{uid}
     </select>
 </mapper>

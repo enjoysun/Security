@@ -5,5 +5,5 @@ import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.Mymapper;
 
 public interface TbUserMapper extends Mymapper<TbUser> {
-    TbUser selectUserRolePermission(@Param("uid") Long uid);
+    TbUser selectUserRolePermission(@Param("uid") String uid);
 }
