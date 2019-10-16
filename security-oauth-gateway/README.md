@@ -49,7 +49,7 @@ scope:访问范围
 ![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_code_authorize_code.png)  
 
 . 拿到授权码进行/oauth/token访问获取token  
-![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_code_authorize_success.png)
+![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_anthorize_success.png)
 
 ```text
 1.访问/oauth/authorize进行授权码获取(进行登录)
