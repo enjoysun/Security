@@ -3,6 +3,7 @@
 > 前者为单纯的spring-security框架实现系统权限验证项目(注:mvn包含spring-security和jjwt即可)  
 后者是借助spring-security的基础上实现了oauth2.0的spring-security-oauth框架来实现**授权码认证第三方应用模式、账号密码授权模式**(注:mvn包含spring-security-oauth2、spring-security-jwt即可jwt可选不与oauth协议冲突)
 
+<hr />
 
 #### 项目协议  
 
@@ -10,10 +11,63 @@
 密码认证进行项目系统组成部分客户端认证用于用户登录  
 
 > 所以本项目中授权类型grant_type:password密码模式、authorization_code授权码模式  
+/oauth/authorize：授权端点  
+/oauth/token：令牌端点  
+/oauth/confirm_access：用户确认授权提交端点  
+/oauth/error：授权服务错误信息端点  
+/oauth/check_token：用于资源服务访问的令牌解析端点  
+/oauth/token_key：提供公有密匙的端点，如果你使用 JWT 令牌的话   
 
+###### 密码模式获取过程  
+![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_password.png)
+![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_password_paramaters.png)
+![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_password_success.png)
 
+> 注:oauth密码模式不支持json访问，需要使用form模式端点访问  
+basic auth：即http header中:Authorization:Basic (app_id:app_secret).base64
 
-### 授权服务中心  
+```text
+密码模式获取token:
+1.访问/oauth/token端点
+2.需要参数:
+scope:read/write
+grant_type:password
+username:用户民
+password:密码
+scope:访问范围
+```
+
+###### 授权码模式过程 
+
+. 访问http://localhost:8040/oauth/authorize?client_id=app_id&response_type=code进行登录认证  
+![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_code_login.png)
+
+. 资源拥有者进行授权确认  
+![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_code_authorize.png)
+
+. 同意授权后获取授权码  
+![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_code_authorize_code.png)  
+
+. 拿到授权码进行/oauth/token访问获取token  
+![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_code_authorize_success.png)
+
+```text
+1.访问/oauth/authorize进行授权码获取(进行登录)
+response_type：表示授权类型，必选项，此处的值固定为"code"
+client_id：表示客户端的ID，必选项
+redirect_uri：表示重定向URI，可选项
+scope：表示申请的权限范围，可选项
+state：表示客户端的当前状态，可以指定任意值，认证服务器会原封不动地返回这个值。
+2.拿到授权码后进行token获取(/oauth/token),需要参数:
+grant_type：表示使用的授权模式，必选项，此处的值固定为"authorization_code"。
+code：表示上一步获得的授权码，必选项。
+redirect_uri：表示重定向URI，必选项，且必须与A步骤中的该参数值保持一致。
+client_id：表示客户端ID，必选项
+```
+
+<hr />
+
+### 授权服务中心搭建过程  
 
 #### 服务器安全配置  
 

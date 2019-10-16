@@ -2,7 +2,10 @@ package com.myou.spring.cloud.service.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,5 +26,19 @@ public class demo {
         log.info(String.format("端口%d进行重试", port));
 //        Thread.sleep(1000);
         return String.format("%s:%d", message, port);
+    }
+
+    @GetMapping("/product/{id}")
+    public String getProduct(@PathVariable String id) {
+        //for debug
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return "product id :" + id;
+    }
+
+    @GetMapping("/order/{id}")
+    public String getOrder(@PathVariable String id) {
+        //for debug
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return "order id :" + id;
     }
 }

@@ -1,10 +1,8 @@
 package com.myou.gateway.security.oauth.Grant.Server;
 
-import com.myou.gateway.security.oauth.Common.BaseSourceConfig.SecurityProperties;
 import com.myou.gateway.security.oauth.Grant.Service.Impl.UserDetailImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -21,11 +19,8 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import javax.sql.DataSource;
-import java.security.KeyPair;
 
 /*
  * @Time    : 2019/10/15 4:03 PM
@@ -103,6 +98,7 @@ public class AuthorizationServerConfigurationExtension extends AuthorizationServ
         endpoints.authenticationManager(authenticationManager)
                 .accessTokenConverter(jwtAccessTokenConverter)
                 .userDetailsService(userDetail)
-                .tokenStore(tokenStore());
+                .tokenStore(tokenStore())
+                .pathMapping("/oauth/confirm_access", "/rbac/confirm_access");
     }
 }

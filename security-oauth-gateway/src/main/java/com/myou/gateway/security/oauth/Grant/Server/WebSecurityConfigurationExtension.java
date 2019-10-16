@@ -50,18 +50,24 @@ public class WebSecurityConfigurationExtension extends WebSecurityConfigurerAdap
     public void configure(WebSecurity web) throws Exception {
         // 过滤路由配置
         web.ignoring()
-                .mvcMatchers("/oauth/**")
-                .mvcMatchers("/rbac/**");
+                .antMatchers("/oauth/check_token");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // 开放路由配置
-        http.csrf().disable()
-                .cors().and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http.requestMatchers()
+                .antMatchers("/auth/login","/auth/authorize","/oauth/authorize")
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll().anyRequest().authenticated();
+                .authorizeRequests()
+                .antMatchers("/auth/login", "/auth/authorize").permitAll()
+                .anyRequest().authenticated();
+
+        http.formLogin()
+                .loginPage("/auth/login")
+                .loginProcessingUrl("/auth/authorize");
+
+        http.httpBasic().disable();
     }
 
     // 跨域配置(WebSecurityHttp也需要支持cors().and())
