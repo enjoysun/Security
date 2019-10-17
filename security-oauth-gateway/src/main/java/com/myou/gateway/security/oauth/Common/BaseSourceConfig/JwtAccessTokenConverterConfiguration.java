@@ -1,5 +1,6 @@
 package com.myou.gateway.security.oauth.Common.BaseSourceConfig;
 
+import com.myou.gateway.security.oauth.Grant.Model.UserDetailExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -30,25 +31,22 @@ import java.util.HashMap;
  */
 @Configuration
 @EnableConfigurationProperties(SecurityProperties.class)
-public class JwtAccessTokenConverterConfig {
+public class JwtAccessTokenConverterConfiguration {
     @Autowired
     private SecurityProperties securityProperties;
 
     @Bean
-    public JwtAccessTokenConverter jwtAccessTokenConverter() {
+    public JwtAccessTokenConverter jwtAccessTokenEnhance() {
         SecurityProperties.JwtProperties securityPropertiesJwt = securityProperties.getJwt();
         KeyPair keyPair = keyPair(securityPropertiesJwt, keyStoreKeyFactory(securityPropertiesJwt));
-        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter(){
+        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter() {
             @Override
             public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-                String name = authentication.getUserAuthentication().getName();
-                Object credentials = authentication.getUserAuthentication().getCredentials(); //用户名
-                Object details = authentication.getUserAuthentication().getDetails();
-                Collection<GrantedAuthority> authorities = authentication.getAuthorities();
+                UserDetailExtension user = (UserDetailExtension) authentication.getUserAuthentication().getPrincipal();
                 HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("name", name);
-                hashMap.put("credentials", credentials);
-                hashMap.put("authorities", authorities);
+                hashMap.put("phone", user.getPhone());
+                hashMap.put("email", user.getEmail());
+                hashMap.put("roles", user.getRoles());
                 ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(hashMap);
                 return super.enhance(accessToken, authentication);
             }
