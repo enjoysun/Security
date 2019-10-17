@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
  * @File    : CustomError.java
  * @Software: IntelliJ IDEA
  */
-@RestController
-public class CustomError implements ErrorController {
-    @Override
-    public String getErrorPath() {
-        return "/error";
-    }
-
-    @RequestMapping("/error")
-    public String handlerError() {
-        return "自定义错误处理";
-    }
-}
+//@RestController
+//public class CustomError implements ErrorController {
+//    @Override
+//    public String getErrorPath() {
+//        return "/error";
+//    }
+//
+//    @RequestMapping("/error")
+//    public String handlerError() {
+//        return "自定义错误处理";
+//    }
+//}

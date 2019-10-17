@@ -13,7 +13,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import java.security.KeyPair;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 /*
@@ -48,6 +50,10 @@ public class JwtAccessTokenConverterConfiguration {
                 hashMap.put("email", user.getEmail());
                 hashMap.put("roles", user.getRoles());
                 ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(hashMap);
+                // 设置过期时间
+//                GregorianCalendar calendar = new GregorianCalendar();
+//                calendar.add(Calendar.MILLISECOND, 20);
+//                ((DefaultOAuth2AccessToken) accessToken).setExpiration(calendar.getTime());
                 return super.enhance(accessToken, authentication);
             }
         };

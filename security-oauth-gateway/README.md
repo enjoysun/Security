@@ -63,7 +63,20 @@ grant_type：表示使用的授权模式，必选项，此处的值固定为"aut
 code：表示上一步获得的授权码，必选项。
 redirect_uri：表示重定向URI，必选项，且必须与A步骤中的该参数值保持一致。
 client_id：表示客户端ID，必选项
+```  
+. 刷新token进行/oauth/token访问获取token 
+![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/refresh_auth.png)
+![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/refresh_paramater.png)
+```text
+grant_type:refresh_token
+//client_id:客户端ID
+//client_secret:secret
+refresh_token:token
 ```
+
+.解析jwtToken信息/oauth/check_token
+![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/check_token.png)
+
 
 <hr />
 
