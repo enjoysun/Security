@@ -256,7 +256,9 @@ public class AuthorizationServerConfigurationExtension extends AuthorizationServ
 
 <hr />
 
-#### self-signed certificate configure(本文生产的mykeystore.jks步骤)  
+### JWT加密和解密
+
+#### self-signed certificate configure(本文生产的mykeystore.jks步骤) 加密密钥生成 
 
 ######1. 安装openssl
 
@@ -311,4 +313,20 @@ keytool -importkeystore -destkeystore mykeystore.jks -srckeystore myp12keystore.
 再次输入新口令:
 输入源密钥库口令:(p12文件口令)
 # 注意alias
+```  
+
+#### 解密公钥生成  
+
+```shell
+keytool -list -rfc --keystore mykeystore.jks | openssl x509 -inform pem -pubkey -noout
+# mykeystore.jks即上面生成的jks文件，输入密钥口令后看到以下样式公钥:
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs3X4s/eHLXIw328yL0Zt
+3ulT2xS852cX2vOYMh/DwBZnRNDnOJHDOlPfcYWp6/VpSTONgUhoA3aJfn+To/h9
+7X4JDnVNRB2FrrZHATcV+iVndbWgMAxux8owbwOlyNwlL0Z1d+raZhnXzYGYkY58
+CLht4MoQMFePNtPIApHz6GUBf0CI3ElrVy9VB1zqGTLHqM4Df5jcOwxVW5D0+MYn
+IfsfCYfY72+nUZdQbWmXPmFCMkePw5ZlkMMhLWvWhYGMdqhWs9EuL9fn9+z2AqGx
+98YsQU4AVbTrKXL1uBROPAmrptF0eKcKSW/LEj/Tzq3XwGbic87OdfCIo9QyfG+B
+LQIDAQAB
+-----END PUBLIC KEY-----
 ```
