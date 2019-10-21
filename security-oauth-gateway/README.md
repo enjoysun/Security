@@ -10,7 +10,7 @@
 > 授权码认证模式用于第三方应用接入  
 密码认证进行项目系统组成部分客户端认证用于用户登录  
 
-> 所以本项目中授权类型grant_type:password密码模式、authorization_code授权码模式  
+> 所以本项目中授权类型grant_type:password密码模式、authorization_code授权码模式、refresh_code  
 /oauth/authorize：授权端点  
 /oauth/token：令牌端点  
 /oauth/confirm_access：用户确认授权提交端点  
@@ -96,7 +96,7 @@ refresh_token:token
 
 >该类也是实现spring-security框架认证部分内容，进行用户信息载入认证。**该模块自定义实现了GrantedAuthorityExtension扩展类进行角色内容类进行扩展**
 
-###### 安全验证配置  
+###### 安全验证配置(该类属于security框架范畴，一般用于权限动态验证或者权限操作)  
 
 ```java
 @Configuration
@@ -158,10 +158,103 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 }
 ```
 
-#### 认证授权配置  
+#### 认证授权配置 (该类是oauth2基于security基础上实现，实现授权中心配置) 
 
-#todo
+```java
+@Configuration
+@EnableAuthorizationServer
+public class AuthorizationServerConfigurationExtension extends AuthorizationServerConfigurerAdapter {
 
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private LettuceConnectionFactory lettuceConnectionFactory;
+
+    @Autowired
+    @Qualifier("authenticationManagerBean")
+    private AuthenticationManager authenticationManager;
+
+
+    // 定制jwtToken元素组成和加密设置(参照com.myou.gateway.security.oauth.Common.BaseSourceConfig.JwtAccessTokenConverterConfiguration)
+    @Autowired
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
+
+    @Autowired
+    private UserDetailImpl userDetail;
+
+    public AuthorizationServerConfigurationExtension() {
+        super();
+    }
+
+    @Bean
+    public TokenStore tokenStore() {
+//        new RedisTokenStore(lettuceConnectionFactory) 使用redis进行token操作
+        return new JwtTokenStore(jwtAccessTokenConverter);
+    }
+
+    @Bean
+    public DefaultTokenServices tokenServices(final ClientDetailsService clientDetailsService) {
+        /**
+        * DefaultTokenServices
+        * 该类主要实现了 ResourceServerTokenServices、AuthorizationServerTokenServices、ConsumerTokenServices 三个接口
+        * 它包含了令牌业务的实现，如创建令牌、读取令牌、刷新令牌、撤销令牌、获取客户端ID。默认的当尝试创建一个令牌时，是使用 UUID 随机值进行填充的
+        * 除了持久化令牌是委托一个 TokenStore 接口实现以外，这个类几乎帮你做了所有事情
+        * */
+        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setSupportRefreshToken(true);
+        defaultTokenServices.setTokenStore(tokenStore());
+        defaultTokenServices.setClientDetailsService(clientDetailsService);
+        defaultTokenServices.setAuthenticationManager(authenticationManager);
+        return defaultTokenServices;
+    }
+
+    @Bean
+    public ClientDetailsService clientDetailsService() {
+        return new JdbcClientDetailsService(dataSource);
+    }
+
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security.passwordEncoder(bCryptPasswordEncoder)
+                .tokenKeyAccess("permitAll()")
+                .checkTokenAccess("isAuthenticated()");
+    }
+
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.withClientDetails(clientDetailsService());
+    }
+
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        // 断点配置区域
+                // authenticationManager属性规定了一个认证管理器，当选择了资源所有者密码授权类型的时候，注入AuthenticationManager对象
+        endpoints.authenticationManager(authenticationManager)
+                // accessTokenConverter属性规定了token生成器是自定义的jwtAccessTokenConverter
+                .accessTokenConverter(jwtAccessTokenConverter)
+                // userDetailsService属性规定了认证用户的角色和信息(参考com.myou.gateway.security.oauth.Grant.Service.Impl.UserDetailImpl)
+                .userDetailsService(userDetail)
+                // 持久化令牌
+                .tokenStore(tokenStore())
+                // 将自定义的路由替换oauth默认路由
+                .pathMapping("/oauth/confirm_access", "/rbac/confirm_access");
+                // tokenGranter属性，完全自定义授权服务实现（TokenGranter 接口实现），只有当标准的四种授权模式已无法满足需求时
+    }
+}
+```  
+
+
+#### 资源服务块配置  
+
+>
+
+
+
+<hr />
 
 #### self-signed certificate configure(本文生产的mykeystore.jks步骤)  
 
