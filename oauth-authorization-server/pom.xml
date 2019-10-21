@@ -10,11 +10,11 @@
         <relativePath>../spring-cloud-dependencies/pom.xml</relativePath>
     </parent>
 
-    <artifactId>security-oauth-gateway</artifactId>
+    <artifactId>oauth-authorization-server</artifactId>
     <packaging>jar</packaging>
     <version>0.0.1</version>
 
-    <name>security-oauth-gateway</name>
+    <name>oauth-authorization-server</name>
     <url>myoueva@gmail.com</url>
     <inceptionYear>2018-Now</inceptionYear>
 
