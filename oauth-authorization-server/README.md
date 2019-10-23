@@ -19,9 +19,10 @@
 /oauth/token_key：提供公有密匙的端点，如果你使用 JWT 令牌的话   
 
 ###### oauth-client初始化api 
-> http://localhost:8040/platform/register 
+http://localhost:8040/platform/register 
 
-提供申请人相关信息(含回调地址)，根据信息生成clientID、secret信息
+> 提供申请人相关信息(含回调地址)，根据信息生成clientID、secret信息  
+登录思路：非第三方、子系统客户端也需要进行注册，注册信息即拥有者信息。属于子系统的用户登录Basic auth即固定有注册信息组成
 
 ###### 密码模式获取过程  
 ![image](https://github.com/enjoysun/Security/blob/master/oauth-authorization-server/src/main/resources/images/grant_type_password.png)
