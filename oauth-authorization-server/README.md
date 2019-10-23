@@ -18,7 +18,8 @@
 /oauth/check_token：用于资源服务访问的令牌解析端点  
 /oauth/token_key：提供公有密匙的端点，如果你使用 JWT 令牌的话   
 
-###### oauth-client初始化api  
+###### oauth-client初始化api 
+> http://localhost:8040/platform/register 
 
 提供申请人相关信息(含回调地址)，根据信息生成clientID、secret信息
 
