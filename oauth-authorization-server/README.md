@@ -18,14 +18,15 @@
 /oauth/check_token：用于资源服务访问的令牌解析端点  
 /oauth/token_key：提供公有密匙的端点，如果你使用 JWT 令牌的话   
 
-###### oauth-client初始化api  
+###### oauth-client初始化api 
+> http://localhost:8040/platform/register 
 
 提供申请人相关信息(含回调地址)，根据信息生成clientID、secret信息
 
 ###### 密码模式获取过程  
-![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_password.png)
-![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_password_paramaters.png)
-![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_password_success.png)
+![image](https://github.com/enjoysun/Security/blob/master/oauth-authorization-server/src/main/resources/images/grant_type_password.png)
+![image](https://github.com/enjoysun/Security/blob/master/oauth-authorization-server/src/main/resources/images/grant_type_password_paramaters.png)
+![image](https://github.com/enjoysun/Security/blob/master/oauth-authorization-server/src/main/resources/images/grant_type_password_success.png)
 
 > 注:oauth密码模式不支持json访问，需要使用form模式端点访问  
 basic auth：即http header中:Authorization:Basic (app_id:app_secret).base64
@@ -44,16 +45,16 @@ scope:访问范围
 ###### 授权码模式过程 
 
 . 访问http://localhost:8040/oauth/authorize?client_id=app_id&response_type=code进行登录认证  
-![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_code_login.png)
+![image](https://github.com/enjoysun/Security/blob/master/oauth-authorization-server/src/main/resources/images/grant_type_code_login.png)
 
 . 资源拥有者进行授权确认  
-![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_code_authorize.png)
+![image](https://github.com/enjoysun/Security/blob/master/oauth-authorization-server/src/main/resources/images/grant_type_code_authorize.png)
 
 . 同意授权后获取授权码  
-![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_code_authorize_code.png)  
+![image](https://github.com/enjoysun/Security/blob/master/oauth-authorization-server/src/main/resources/images/grant_type_code_authorize_code.png)  
 
 . 拿到授权码进行/oauth/token访问获取token  
-![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/grant_type_anthorize_success.png)
+![image](https://github.com/enjoysun/Security/blob/master/oauth-authorization-server/src/main/resources/images/grant_type_anthorize_success.png)
 
 ```text
 1.访问/oauth/authorize进行授权码获取(进行登录)
@@ -69,8 +70,8 @@ redirect_uri：表示重定向URI，必选项，且必须与A步骤中的该参�
 client_id：表示客户端ID，必选项
 ```  
 . 刷新token进行/oauth/token访问获取token 
-![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/refresh_auth.png)
-![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/refresh_paramater.png)
+![image](https://github.com/enjoysun/Security/blob/master/oauth-authorization-server/src/main/resources/images/refresh_auth.png)
+![image](https://github.com/enjoysun/Security/blob/master/oauth-authorization-server/src/main/resources/images/refresh_paramater.png)
 ```text
 grant_type:refresh_token
 //client_id:客户端ID
@@ -79,7 +80,7 @@ refresh_token:token
 ```
 
 .解析jwtToken信息/oauth/check_token
-![image](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/resources/images/check_token.png)
+![image](https://github.com/enjoysun/Security/blob/master/oauth-authorization-server/src/main/resources/images/check_token.png)
 
 
 <hr />
@@ -90,13 +91,13 @@ refresh_token:token
 
 ##### 自定义用户实体  
 
-[参考com.myou.gateway.security.oauth.Grant.Model.UserDetailExtension](#https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/java/com/myou/gateway/security/oauth/Grant/Model/UserDetailExtension.java)
+[参考com.myou.gateway.security.oauth.Grant.Model.UserDetailExtension](https://github.com/enjoysun/Security/blob/master/oauth-authorization-server/src/main/java/com/myou/gateway/security/oauth/Grant/Model/UserDetailExtension.java)
 
 >用户实体信息继承自spring-security的UserDetails规则接口，实现接口方法，且可深度定制系统相关信息字段方法  
 
 ###### 认证加载用户信息  
 
-[参考com.myou.gateway.security.oauth.Grant.Service.Impl.UserDetailImpl](https://github.com/enjoysun/Security/blob/master/security-oauth-gateway/src/main/java/com/myou/gateway/security/oauth/Grant/Service/Impl/UserDetailImpl.java)
+[参考com.myou.gateway.security.oauth.Grant.Service.Impl.UserDetailImpl](https://github.com/enjoysun/Security/blob/master/oauth-authorization-server/src/main/java/com/myou/gateway/security/oauth/Grant/Service/Impl/UserDetailImpl.java)
 
 >该类也是实现spring-security框架认证部分内容，进行用户信息载入认证。**该模块自定义实现了GrantedAuthorityExtension扩展类进行角色内容类进行扩展**
 
