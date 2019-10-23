@@ -45,6 +45,9 @@ public class TbUser implements Serializable {
     @Column(name = "updated")
     private Date updated;
 
+    @Column(name = "platform_id")
+    private Long platformId;
+
     private List<TbRole> roles;
 
     private static final long serialVersionUID = 1L;

@@ -2,9 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.myou.gateway.security.oauth.Mapper.OauthClientDetailsMapper">
   <resultMap id="BaseResultMap" type="com.myou.gateway.security.oauth.Model.OauthClientDetails">
-    <!--@mbg.generated generated on Mon Oct 14 16:48:10 CST 2019.-->
+    <!--@mbg.generated generated on Wed Oct 23 11:55:21 CST 2019.-->
     <!--@Table oauth_client_details-->
-    <id column="client_id" jdbcType="VARCHAR" property="clientId" />
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="client_id" jdbcType="VARCHAR" property="clientId" />
     <result column="resource_ids" jdbcType="VARCHAR" property="resourceIds" />
     <result column="client_secret" jdbcType="VARCHAR" property="clientSecret" />
     <result column="scope" jdbcType="VARCHAR" property="scope" />
@@ -15,11 +18,12 @@
     <result column="refresh_token_validity" jdbcType="INTEGER" property="refreshTokenValidity" />
     <result column="additional_information" jdbcType="VARCHAR" property="additionalInformation" />
     <result column="autoapprove" jdbcType="VARCHAR" property="autoapprove" />
+    <result column="platform_id" jdbcType="VARCHAR" property="platformId" />
   </resultMap>
   <sql id="Base_Column_List">
-    <!--@mbg.generated generated on Mon Oct 14 16:48:10 CST 2019.-->
-    client_id, resource_ids, client_secret, `scope`, authorized_grant_types, web_server_redirect_uri, 
-    authorities, access_token_validity, refresh_token_validity, additional_information, 
-    autoapprove
+    <!--@mbg.generated generated on Wed Oct 23 11:55:21 CST 2019.-->
+    id, `name`, phone, client_id, resource_ids, client_secret, `scope`, authorized_grant_types, 
+    web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, 
+    additional_information, autoapprove, platform_id
   </sql>
 </mapper>

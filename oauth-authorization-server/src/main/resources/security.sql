@@ -52,10 +52,12 @@ CREATE TABLE `tb_user` (
   `email` varchar(50) DEFAULT NULL COMMENT '注册邮箱',
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
+  `platform_id` bigint UNSIGNED,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`) USING BTREE,
   UNIQUE KEY `phone` (`phone`) USING BTREE,
-  UNIQUE KEY `email` (`email`) USING BTREE
+  UNIQUE KEY `email` (`email`) USING BTREE,
+  constraint foreign key (platform_id) references oauth_client_details(id)
 ) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COMMENT='用户表';
 insert  into `tb_user`(`id`,`username`,`password`,`phone`,`email`,`created`,`updated`) values
 (37,'admin','$2a$10$9ZhDOBp.sRKat4l14ygu/.LscxrMUcDAfeVOEPiYwbcRkoB09gCmi','15888888888','lee.lusifer@gmail.com','2019-04-04 23:21:27','2019-04-04 23:21:29');

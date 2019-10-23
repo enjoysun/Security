@@ -11,6 +11,7 @@
         <result column="email" jdbcType="VARCHAR" property="email"/>
         <result column="created" jdbcType="TIMESTAMP" property="created"/>
         <result column="updated" jdbcType="TIMESTAMP" property="updated"/>
+        <result column="platform_id" jdbcType="BIGINT" property="platformId" />
     </resultMap>
     <resultMap id="UserRoleAndPermissionResultMap" type="com.myou.gateway.security.oauth.Model.TbUser">
         <!--@mbg.generated generated on Mon Oct 14 16:48:09 CST 2019.-->
@@ -38,7 +39,7 @@
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated generated on Mon Oct 14 16:48:09 CST 2019.-->
-        id, username, `password`, phone, email, created, updated
+        id, username, `password`, phone, email, created, updated, platform_id
     </sql>
 
     <select id="selectUserRolePermission" resultMap="UserRoleAndPermissionResultMap">

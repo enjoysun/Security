@@ -1,7 +1,10 @@
 -- spring security oauth2 持久化数据库结构
 -- used in tests that use mysql
 create table oauth_client_details (
-  client_id VARCHAR(256) PRIMARY KEY,
+  id BIGINT UNSIGNED auto_increment COMMENT "第三方ID",
+	name VARCHAR(64) not null COMMENT "注册名称",
+	phone VARCHAR(16) not null,
+  client_id VARCHAR(256),
   resource_ids VARCHAR(256),
   client_secret VARCHAR(256),
   scope VARCHAR(256),
@@ -11,7 +14,9 @@ create table oauth_client_details (
   access_token_validity INTEGER,
   refresh_token_validity INTEGER,
   additional_information VARCHAR(4096),
-  autoapprove VARCHAR(256)
+  autoapprove VARCHAR(256),
+  platform_id BIGINT UNSIGNED,
+  PRIMARY KEY (id)
 );
 
 create table oauth_client_token (

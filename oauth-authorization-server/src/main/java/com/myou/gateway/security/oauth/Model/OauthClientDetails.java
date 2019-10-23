@@ -2,12 +2,31 @@ package com.myou.gateway.security.oauth.Model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Table(name = "oauth_client_details")
+@Builder
 public class OauthClientDetails implements Serializable {
+    /**
+     * 第三方ID
+     */
     @Id
+    @Column(name = "id")
+    @GeneratedValue(generator = "JDBC")
+    private Long id;
+
+    /**
+     * 注册名称
+     */
+    @Column(name = "`name`")
+    private String name;
+
+    @Column(name = "phone")
+    private String phone;
+
     @Column(name = "client_id")
     private String clientId;
 
@@ -40,6 +59,9 @@ public class OauthClientDetails implements Serializable {
 
     @Column(name = "autoapprove")
     private String autoapprove;
+
+    @Column(name = "platform_id")
+    private String platformId;
 
     private static final long serialVersionUID = 1L;
 }
