@@ -24,7 +24,7 @@ public class demo {
     @GetMapping("/welcome")
     public String eurekaDemo(String message, @Value("${server.port}") int port) throws InterruptedException {
         log.info(String.format("端口%d进行重试", port));
-//        Thread.sleep(1000);
+        Thread.sleep(5000);
         return String.format("%s:%d", message, port);
     }
 
