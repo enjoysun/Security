@@ -1,5 +1,7 @@
 package com.myou.spring.kafka.Common;
 
+import com.myou.spring.kafka.Common.Service.AnnotationTest;
+import com.myou.spring.kafka.Common.Service.DistributedLockable;
 import com.myou.spring.kafka.Common.Service.RedisCliService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,10 +26,11 @@ public class CacheTest {
     private RedisLock redisLock;
 
     @Test
-    public void cacheTest() {
+    @AnnotationTest(name = "tony")
+//    @DistributedLockable(key = "jk", value = "2", timeout = 60, paras = "哦哦哦")
+    public void cacheTest() throws Throwable {
 //        boolean set = redisCliService.set("java:name", "you");
 //        System.out.println(set);
-        boolean trylock = redisLock.trylock("java:lock1", "1", 60);
-        System.out.println(trylock);
+        System.out.println("ok");
     }
 }

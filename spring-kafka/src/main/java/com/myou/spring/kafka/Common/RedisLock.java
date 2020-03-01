@@ -1,5 +1,6 @@
 package com.myou.spring.kafka.Common;
 
+import com.myou.spring.kafka.Common.Service.CacheLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -17,13 +18,15 @@ import org.springframework.stereotype.Component;
  * @File    : RedisLock.java
  * @Software: IntelliJ IDEA
  */
+
 @Component
-public class RedisLock {
+public class RedisLock implements CacheLock {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    public Boolean trylock(String key, String value, long timeout) {
-        return (Boolean) redisTemplate.execute((RedisConnection redisConnection) -> {
+    @Override
+    public <T> T tryLock(String key, String value, long timeout, AcquireHandler acquireHandler) throws Throwable {
+        Boolean execute = (Boolean) redisTemplate.execute((RedisConnection redisConnection) -> {
             RedisStringCommands redisStringCommands = redisConnection.stringCommands();
             Boolean aBoolean = redisStringCommands.set(
                     key.getBytes(),
@@ -32,5 +35,9 @@ public class RedisLock {
                     RedisStringCommands.SetOption.SET_IF_ABSENT);
             return aBoolean;
         });
+        if (execute) {
+            acquireHandler.handler();
+        }
+        return null;
     }
 }

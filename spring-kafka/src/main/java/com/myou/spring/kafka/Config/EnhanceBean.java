@@ -11,18 +11,18 @@ import org.springframework.stereotype.Component;
  * @File    : EnhanceBean.java
  * @Software: IntelliJ IDEA
  */
-@Component
-public class EnhanceBean implements BeanPostProcessor {
-
-    @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        System.out.println(String.format("增强初始化前Bean:%s", beanName));
-        return bean;
-    }
-
-    @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        System.out.println(String.format("增强初始化后Bean:%s", beanName));
-        return bean;
-    }
-}
+//@Component
+//public class EnhanceBean implements BeanPostProcessor {
+//
+//    @Override
+//    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+//        System.out.println(String.format("增强初始化前Bean:%s", beanName));
+//        return bean;
+//    }
+//
+//    @Override
+//    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+//        System.out.println(String.format("增强初始化后Bean:%s", beanName));
+//        return bean;
+//    }
+//}
